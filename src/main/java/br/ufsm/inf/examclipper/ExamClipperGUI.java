@@ -67,7 +67,12 @@ import javafx.stage.FileChooser;
 
 public class ExamClipperGUI extends JFrame {
 
-   private static final String WINDOW_TITLE = "[ExamClipper]";
+   /**
+	 * Serial UID gerado pelo eclipse
+	 */
+	private static final long serialVersionUID = 7944080089673132548L;
+
+	private static final String WINDOW_TITLE = "[ExamClipper]";
 
    private static final int DEFAULT_WIDTH = 670;
    private static final int DEFAULT_HEIGHT = 490;
@@ -554,7 +559,8 @@ public class ExamClipperGUI extends JFrame {
       mPagePanel.repaint();
    }
 
-   private void pagesListMouseClicked(MouseEvent event) {
+   @SuppressWarnings("rawtypes")
+private void pagesListMouseClicked(MouseEvent event) {
       JList list = (JList) event.getSource();
 
       int selectedIndex = list.getSelectedIndex();
@@ -572,6 +578,7 @@ public class ExamClipperGUI extends JFrame {
    }
 
    // Methods
+   @SuppressWarnings("unchecked")
    public void attFilesList() {
       DefaultListModel<Page> listModel = new DefaultListModel<>();
 
@@ -610,6 +617,7 @@ public class ExamClipperGUI extends JFrame {
    private FooterPanel footerPanel;
 
    private JScrollPane pagesListScrollPane;
+   @SuppressWarnings("rawtypes")
    private JList pagesList;
    private PagePanel mPagePanel;
 
