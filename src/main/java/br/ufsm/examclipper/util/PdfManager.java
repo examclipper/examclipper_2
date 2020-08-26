@@ -55,7 +55,7 @@ public final class PdfManager {
 		try {
 			o2=new ObjectExtractor(PDDocument.load(f));
 			Page pagina;
-	    	BasicExtractionAlgorithm bea = new BasicExtractionAlgorithm();
+			AdvancedExtractionAlgorith bea = new AdvancedExtractionAlgorith();
 	    	pagina = o2.extract(page).getArea(r);
 	        return bea.extract(pagina).get(0);
         } finally {
