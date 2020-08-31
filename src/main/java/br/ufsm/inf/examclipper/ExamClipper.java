@@ -30,6 +30,7 @@ public class ExamClipper {
 						EnadeTable e = new EnadeTable(f, r, entry.getKey());
 						out.println("Página: "+entry.getKey());
 						String[][] mat = e.extract(); 
+						out.println("Tipo: "+e.getTypeTable());
 						for(int x=0;x<mat.length;x++) {
 		    	        	for(int y=0;y<mat[x].length;y++) {
 		    	        		out.print(mat[x][y]+((y!=mat[x].length-1)?" | ":""));
@@ -37,6 +38,8 @@ public class ExamClipper {
 		    	        	out.println();
 		    	        }
 						out.println();
+					} catch (ClassNotFoundException e) {
+						//e.printStackTrace();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
