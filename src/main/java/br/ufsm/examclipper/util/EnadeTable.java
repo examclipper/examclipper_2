@@ -331,7 +331,7 @@ public class EnadeTable {
 			return PdfManager.getArrayFromTable(newT);
 		case TYPE_CONCEITO_ENADE:
 		case 0:
-			//throw new ClassNotFoundException("Tabela não encontrada");
+			throw new ClassNotFoundException("Tabela não encontrada");
 		}
 		return PdfManager.getArrayFromTable(t);
 	}
