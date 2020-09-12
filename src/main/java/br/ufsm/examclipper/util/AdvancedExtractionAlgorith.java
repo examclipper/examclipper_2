@@ -2,9 +2,13 @@ package br.ufsm.examclipper.util;
 import technology.tabula.TextElement;
 import technology.tabula.extractors.ExtractionAlgorithm;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Arrays;
 
@@ -34,6 +38,7 @@ public class AdvancedExtractionAlgorith implements ExtractionAlgorithm {
         this.verticalRulings = verticalRulings;
         return this.extract(page);
     }
+    
 
     @Override
     public List<Table> extract(Page page) {

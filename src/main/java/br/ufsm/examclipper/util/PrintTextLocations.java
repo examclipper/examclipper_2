@@ -3,7 +3,6 @@ package br.ufsm.examclipper.util;
 import java.io.*;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.text.PDFTextStripperByArea;
 import org.apache.pdfbox.text.TextPosition;
 
@@ -26,15 +25,12 @@ public class PrintTextLocations extends PDFTextStripperByArea {
             }
             PrintTextLocations printer = new PrintTextLocations();
             printer.setSortByPosition(true);
-            printer.setStartPage(0);
-            printer.setEndPage(document.getNumberOfPages());
+            printer.setStartPage(2);
+            printer.setEndPage(2);
             
             OutputStreamWriter dummy = new OutputStreamWriter(new ByteArrayOutputStream());
             printer.writeText(document, dummy);
-
-            
-            PDPageTree allPages = document.getDocumentCatalog().getPages();
-            printer.processPages(allPages);
+            System.out.println("Foi");
         } finally {
             if (document != null) {
                 document.close();
@@ -46,11 +42,6 @@ public class PrintTextLocations extends PDFTextStripperByArea {
     @Override
     protected void writeString(String str, List<TextPosition> textPositions) throws IOException {
     	super.writeString(str, textPositions);
-    	for (TextPosition text : textPositions) {
-            out.println(text.getUnicode()+ " [(X=" + text.getXDirAdj() + ",Y=" +
-                    text.getYDirAdj() + ") height=" + text.getHeightDir() + " width=" +
-                    text.getWidthDirAdj() + "]");
-        }
     }
    
     
@@ -63,5 +54,8 @@ public class PrintTextLocations extends PDFTextStripperByArea {
     @Override
     protected void processTextPosition(TextPosition text) {
     	super.processTextPosition(text);
+    	out.println(text.getUnicode()+ " [(X=" + text.getXDirAdj() + ",Y=" +
+                text.getYDirAdj() + ") height=" + text.getHeightDir() + " width=" +
+                text.getWidthDirAdj() + "]");
     }
 }

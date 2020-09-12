@@ -38,7 +38,8 @@ public class UtilsForTesting {
         }
     }
 
-    public static String[][] tableToArrayOfRows(Table table) {
+    @SuppressWarnings("rawtypes")
+	public static String[][] tableToArrayOfRows(Table table) {
         List<List<RectangularTextContainer>> tableRows = table.getRows();
 
         int maxColCount = 0;

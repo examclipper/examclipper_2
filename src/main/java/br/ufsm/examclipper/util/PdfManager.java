@@ -1,7 +1,10 @@
 package br.ufsm.examclipper.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +17,8 @@ import technology.tabula.PageIterator;
 import technology.tabula.Rectangle;
 import technology.tabula.RectangularTextContainer;
 import technology.tabula.Table;
+import technology.tabula.TextElement;
 import technology.tabula.detectors.NurminenDetectionAlgorithm;
-import technology.tabula.extractors.BasicExtractionAlgorithm;
 
 public final class PdfManager {
 
@@ -50,6 +53,18 @@ public final class PdfManager {
         }
 	}
 	
+	public static int getPages(File f) throws IOException {
+		ObjectExtractor extractor =null;
+		try {
+			//Carrega documento pdf e o extrator
+			PDDocument pdfDocument = PDDocument.load(f);
+	        return pdfDocument.getNumberOfPages();
+		} finally {
+            if (extractor != null)
+            	extractor.close();
+        }
+	}
+	
 	public static Table getTable(File f, int page, Rectangle r) throws IOException{
 		ObjectExtractor o2 =null;
 		try {
@@ -62,6 +77,10 @@ public final class PdfManager {
             if (o2 != null)
             	o2.close();
         }
+	}
+	
+	public static int getColumnsAmount(File f, int pageSelected){
+		return 1;
 	}
 	
 	public static Page getPage(String path, int pageNumber) throws IOException {

@@ -3,6 +3,8 @@ package br.ufsm.examclipper.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import technology.tabula.Rectangle;
 import technology.tabula.Table;
@@ -27,6 +29,31 @@ public class EnadeTable {
 	private File f;
 	private Rectangle r;
 	
+	
+	public static List<EnadeTable> getAllEnadeTable(File f) {
+		ArrayList<EnadeTable> arr = new ArrayList<EnadeTable>();
+		try {
+			Map<Integer, List<Rectangle>> map =PdfManager.findTables(f);
+			for(Map.Entry<Integer, List<Rectangle>> entry: map.entrySet()) {
+				for(Rectangle r:entry.getValue()) {
+					try {
+						EnadeTable e = new EnadeTable(f, r, entry.getKey());
+						e.extract();
+						arr.add(e);
+					} catch (ClassNotFoundException e) {
+						//e.printStackTrace();
+					} catch (Exception e) {
+						//e.printStackTrace();
+					}
+				}
+			}
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return arr;
+	}
 	
 	public EnadeTable(File f,Rectangle r,int page) {
 		this.r=r;

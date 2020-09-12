@@ -1,6 +1,7 @@
 package br.ufsm.inf.examclipper.controller;
 
 import br.ufsm.inf.examclipper.model.Page;
+import nu.pattern.OpenCV;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,22 +38,24 @@ public class PDFConversor extends Thread {
    public int currentPage;
 
    public PDFConversor(File file, final List<Page> lPages) {
-      System.out.println(" > [Conversor] " + file);
-
-      try {
-         pdf = PDDocument.load(file);
-         this.lPages = lPages;
-         currentPage = 1;
-
-         nu.pattern.OpenCV.loadShared();
-//         System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
-         System.out.println(" > [ConversorController] OpenCV Processor Loaded");
-      } catch (Exception e) {
-         nu.pattern.OpenCV.loadLocally();
-
-         System.out.println(" > [Conversor] Failed to load PDF!");
-         pdf = null;
-      }
+	  System.out.println(" > [Conversor] " + file);
+	
+	  try {
+		  pdf = PDDocument.load(file);
+		  this.lPages = lPages;
+		  currentPage = 1;
+		  OpenCV.loadShared();
+		  System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
+		  System.out.println(" > [ConversorController] OpenCV Processor Loaded");
+	   }catch (ExceptionInInitializerError e){
+		  OpenCV.loadLocally();
+		  //Segue a thread https://github.com/openpnp/opencv/issues/44
+		  // - "Instead of OpenCV.loadShared(); you can use OpenCV.loadLocally(); if it's appropriate for your project.
+		  //    In JDK10+ they restricted the reflective access so it won't work anymore.
+	   } catch (Exception e) {
+		  System.out.println(" > [Conversor] Failed to load PDF!");
+	      pdf = null;
+	   }
    }
 
    @Override
@@ -97,20 +100,20 @@ public class PDFConversor extends Thread {
       return pdf.getNumberOfPages();
    }
 
-   private Mat inputStream2Mat(InputStream is, int flag) throws IOException {
+   private static Mat inputStream2Mat(InputStream is, int flag) throws IOException {
       byte[] byteBuffer = IOUtils.toByteArray(is);
 
       return Imgcodecs.imdecode(new MatOfByte(byteBuffer), flag);
    }
 
-   private InputStream bufferedImage2InputStream(BufferedImage bi) throws IOException {
+   private static InputStream bufferedImage2InputStream(BufferedImage bi) throws IOException {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ImageIO.write(bi, "jpg", baos);
+      ImageIO.write(bi, IMAGE_FORMAT, baos);
 
       return new ByteArrayInputStream(baos.toByteArray());
    }
 
-   private Mat bufferedImage2Mat(BufferedImage bi, int flag) throws IOException {
+   public static Mat bufferedImage2Mat(BufferedImage bi, int flag) throws IOException {
       return inputStream2Mat(bufferedImage2InputStream(bi), flag);
    }
 }
