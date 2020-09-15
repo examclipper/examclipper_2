@@ -117,7 +117,7 @@ public final class PdfManager {
 		for(br.ufsm.inf.examclipper.model.Page page:lPages) {
 			try {
 				// Cria um arquivo temporario contendo o jpg
-				Mat dst = new Mat(), cdst = new Mat(), cdstP,lines = new Mat();
+				Mat dst = new Mat(), cdst = new Mat(), cdstP;
 				File image = File.createTempFile("imageManipulationJava", "jpg");
 				ImageIO.write(page.getBufferedImage(), "jpg", image);
 				// Le o arquivo com tons de cinza
@@ -127,6 +127,7 @@ public final class PdfManager {
 		        Imgproc.cvtColor(mat, cdst, Imgproc.COLOR_GRAY2BGR);
 		        cdstP = cdst.clone();
 		        /*
+		        Mat lines = new Mat();
 		        Imgproc.HoughLines(dst, lines, 1, Math.PI, 600);
 		        for (int x = 0; x < lines.rows(); x++) {
 		            double rho = lines.get(x, 0)[0],
@@ -150,14 +151,16 @@ public final class PdfManager {
 		        }
 		        if(aux>0)aux=(aux)/2 + 1;
 		        else aux=0;
-				//BufferedImage imgSave = new BufferedImage(mat.width(), mat.height(), BufferedImage.TYPE_3BYTE_BGR);
-				//byte[] data = ((DataBufferByte) imgSave.getRaster().getDataBuffer()).getData();
-				//cdstP.get(0, 0, data);
-				//image=new File("B:/Java/imagem"+(k++)+".jpg");
-				//ImageIO.write(imgSave, "jpg", image);
-		        arr.add(aux);
+				/*
+		        BufferedImage imgSave = new BufferedImage(mat.width(), mat.height(), BufferedImage.TYPE_3BYTE_BGR);
+				byte[] data = ((DataBufferByte) imgSave.getRaster().getDataBuffer()).getData();
+				cdstP.get(0, 0, data);
+				image=new File("B:/Java/imagem"+(k++)+".jpg");
+				ImageIO.write(imgSave, "jpg", image);
+		        */
+				arr.add(aux);
 			} catch (Exception e) {
-				e.printStackTrace();
+				// e.printStackTrace();
 				arr.add(1);
 			}
 		}
