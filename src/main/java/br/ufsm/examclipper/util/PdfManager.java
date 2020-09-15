@@ -1,5 +1,7 @@
 package br.ufsm.examclipper.util;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,8 +11,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
+import javax.imageio.ImageIO;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.highgui.HighGui;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
+import br.ufsm.inf.examclipper.controller.PDFConversor;
 import technology.tabula.ObjectExtractor;
 import technology.tabula.Page;
 import technology.tabula.PageIterator;
@@ -96,6 +107,62 @@ public final class PdfManager {
                 oe.close();
         }
     }
+	
+	public static List<Integer> getColumnsPerPage(File f){
+		List<br.ufsm.inf.examclipper.model.Page> lPages = new ArrayList<>();
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		PDFConversor p = new PDFConversor(f, lPages);
+		p.run();
+		int k=0;
+		for(br.ufsm.inf.examclipper.model.Page page:lPages) {
+			try {
+				// Cria um arquivo temporario contendo o jpg
+				Mat dst = new Mat(), cdst = new Mat(), cdstP,lines = new Mat();
+				File image = File.createTempFile("imageManipulationJava", "jpg");
+				ImageIO.write(page.getBufferedImage(), "jpg", image);
+				// Le o arquivo com tons de cinza
+				Mat mat = Imgcodecs.imread(image.getAbsolutePath(),Imgcodecs.IMREAD_GRAYSCALE);
+				Integer aux=1;
+				Imgproc.Canny(mat, dst, 50, 200, 3, false);
+		        Imgproc.cvtColor(mat, cdst, Imgproc.COLOR_GRAY2BGR);
+		        cdstP = cdst.clone();
+		        /*
+		        Imgproc.HoughLines(dst, lines, 1, Math.PI, 600);
+		        for (int x = 0; x < lines.rows(); x++) {
+		            double rho = lines.get(x, 0)[0],
+		                    theta = lines.get(x, 0)[1];
+		            double a = Math.cos(theta), b = Math.sin(theta);
+		            double x0 = a*rho, y0 = b*rho;
+		            Point pt1 = new Point(Math.round(x0 + 1000*(-b)), Math.round(y0 + 1000*(a)));
+		            Point pt2 = new Point(Math.round(x0 - 1000*(-b)), Math.round(y0 - 1000*(a)));
+		            Imgproc.line(cdst, pt1, pt2, new Scalar(255, 0, 0), 1, Imgproc.LINE_AA, 0);
+			    }
+		        */
+		        // Execução do arquivo de detecção de linhas probabilisto mas que funciona melhor q o normal
+		        Mat linesP = new Mat();
+		        Imgproc.HoughLinesP(dst, linesP,1,Math.PI,100,400,5);
+		        for (int x = 0; x < linesP.rows(); x++) {
+		            double[] l = linesP.get(x, 0);
+		            Point pt1 = new Point(l[0], l[1]);
+		            Point pt2 = new Point(l[2], l[3]);
+		            Imgproc.line(cdstP, pt1, pt2, new Scalar(0, 0, 255), 1, Imgproc.LINE_AA, 0);
+		            aux++;
+		        }
+		        if(aux>0)aux=(aux)/2 + 1;
+		        else aux=0;
+				//BufferedImage imgSave = new BufferedImage(mat.width(), mat.height(), BufferedImage.TYPE_3BYTE_BGR);
+				//byte[] data = ((DataBufferByte) imgSave.getRaster().getDataBuffer()).getData();
+				//cdstP.get(0, 0, data);
+				//image=new File("B:/Java/imagem"+(k++)+".jpg");
+				//ImageIO.write(imgSave, "jpg", image);
+		        arr.add(aux);
+			} catch (Exception e) {
+				e.printStackTrace();
+				arr.add(1);
+			}
+		}
+		return arr;
+	}
 	
 	@SuppressWarnings("rawtypes")
 	public static String[][] getArrayFromTable(Table table){
