@@ -2,13 +2,9 @@ package br.ufsm.examclipper.util;
 import technology.tabula.TextElement;
 import technology.tabula.extractors.ExtractionAlgorithm;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Arrays;
 
@@ -78,6 +74,7 @@ public class AdvancedExtractionAlgorith implements ExtractionAlgorithm {
             
             Collections.sort(elements, new Comparator<TextChunk>() {
 
+				@SuppressWarnings("deprecation")
 				@Override
 				public int compare(TextChunk o1, TextChunk o2) {
 					return new java.lang.Float(o1.getLeft()).compareTo(o2.getLeft());

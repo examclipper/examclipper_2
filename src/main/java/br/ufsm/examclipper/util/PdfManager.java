@@ -1,11 +1,7 @@
 package br.ufsm.examclipper.util;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +13,6 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
-import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
@@ -28,7 +23,6 @@ import technology.tabula.PageIterator;
 import technology.tabula.Rectangle;
 import technology.tabula.RectangularTextContainer;
 import technology.tabula.Table;
-import technology.tabula.TextElement;
 import technology.tabula.detectors.NurminenDetectionAlgorithm;
 
 public final class PdfManager {
@@ -113,7 +107,6 @@ public final class PdfManager {
 		ArrayList<Integer> arr = new ArrayList<Integer>();
 		PDFConversor p = new PDFConversor(f, lPages);
 		p.run();
-		int k=0;
 		for(br.ufsm.inf.examclipper.model.Page page:lPages) {
 			try {
 				// Cria um arquivo temporario contendo o jpg
